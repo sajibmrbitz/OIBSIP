@@ -21,6 +21,29 @@ CREATE TABLE IF NOT EXISTS inventory (
     threshold INT NOT NULL DEFAULT 10
 );
 
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM pg_constraint 
+        WHERE conname = 'unique_inventory_item'
+    ) THEN
+        ALTER TABLE inventory ADD CONSTRAINT unique_inventory_item UNIQUE (item_type, name);
+    END IF;
+END $$;
+
+-- Seed initial inventory data
+INSERT INTO inventory (item_type, name, stock_quantity) VALUES
+('base', 'Thin Crust', 100),
+('base', 'Thick Crust', 100),
+('sauce', 'Tomato', 100),
+('sauce', 'BBQ', 100),
+('cheese', 'Mozzarella', 100),
+('cheese', 'Cheddar', 100),
+('vegetable', 'Onion', 100),
+('vegetable', 'Capsicum', 100)
+ON CONFLICT (item_type, name) DO NOTHING;
+
 CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
