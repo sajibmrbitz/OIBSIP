@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../utils/axios';
+import FakePaymentModal from '../components/FakePaymentModal';
 
 const Checkout = () => {
   const { orderId } = useParams();
@@ -10,6 +11,7 @@ const Checkout = () => {
   const [paying, setPaying] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     console.log('Checkout mounted with orderId:', orderId);
@@ -33,23 +35,30 @@ const Checkout = () => {
     }
   }, [orderId]);
 
-  const handlePay = async () => {
+  const handlePay = () => {
+    setShowModal(true);
+  };
+
+  const handlePaymentSuccess = async (fakeResponse) => {
+    setShowModal(false);
     setPaying(true);
     setError(null);
-    
-    // Simulate payment delay
-    setTimeout(async () => {
-      try {
-        await axiosInstance.post('/payment/simulate', { orderId });
+    try {
+      const { data } = await axiosInstance.post('/payment/verify', {
+        ...fakeResponse,
+        internalOrderId: order.id
+      });
+      if (data.success) {
         setSuccess(true);
         setTimeout(() => {
           navigate('/my-orders');
         }, 2000);
-      } catch (err) {
-        setError(err.response?.data?.message || 'Payment failed');
-        setPaying(false);
       }
-    }, 1500);
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || 'Verification failed');
+      setPaying(false);
+    }
   };
 
   if (loading) {
@@ -139,6 +148,14 @@ const Checkout = () => {
           <div className="mt-4 text-center">
              <Link to="/dashboard" className="text-sm text-gray-500 hover:text-gray-700 font-medium">Cancel and return to Dashboard</Link>
           </div>
+
+          {showModal && (
+            <FakePaymentModal
+              amount={order.total_price}
+              onSuccess={handlePaymentSuccess}
+              onClose={() => setShowModal(false)}
+            />
+          )}
         </div>
       </div>
     </div>

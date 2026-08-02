@@ -1,4 +1,4 @@
-# 🍕 PizzaHub – Full-Stack Pizza Delivery & Inventory Management System (rezorpay left)
+# 🍕 PizzaHub – Full-Stack Pizza Delivery & Inventory Management System
 
 A production-grade MERN stack application that allows customers to build custom pizzas, place orders securely, and track their order status in real time. The platform also provides a dedicated admin dashboard for inventory management, order processing, and automated stock notifications.
 
@@ -62,7 +62,15 @@ A production-grade MERN stack application that allows customers to build custom 
 * Socket.io
 * Node-Cron
 * Nodemailer
-* Razorpay SDK
+* Razorpay
+
+## Payment Integration
+Razorpay Checkout is integrated for order payments. Order creation and 
+signature verification follow Razorpay's standard flow (Order API + HMAC-SHA256 
+signature verification). Currently running in demo/test mode using Razorpay's 
+public test key — full account activation requires an Indian PAN-based merchant 
+KYC, so live order creation is simulated for demonstration.
+
 
 ### Database
 
