@@ -44,6 +44,11 @@ INSERT INTO inventory (item_type, name, stock_quantity) VALUES
 ('vegetable', 'Capsicum', 100)
 ON CONFLICT (item_type, name) DO NOTHING;
 
+-- Seed default admin user
+INSERT INTO users (name, email, password_hash, role, is_verified) VALUES
+('Admin', 'admin@pizzadelivery.com', '$2b$10$IRKI2UmwwzwxeYfNKdmiKuqtTB8PpZZHNZJUXe5JW8pEKEPXRiw8y', 'admin', true)
+ON CONFLICT (email) DO NOTHING;
+
 CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
