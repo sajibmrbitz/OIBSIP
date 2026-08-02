@@ -1,80 +1,67 @@
 # 🍕 PizzaHub – Full-Stack Pizza Delivery & Inventory Management System
 
-A production-grade MERN stack application that allows customers to build custom pizzas, place orders securely, and track their order status in real time. The platform also provides a dedicated admin dashboard for inventory management, order processing, and automated stock notifications.
+A production-grade full-stack application that allows customers to build custom pizzas, place orders securely, and track their order status in real time. The platform also provides a dedicated admin dashboard for inventory management, order processing, and automated stock notifications.
+
+This project was built to fulfill the **LEVEL 3** task requirements of a complex full-stack pizza ordering and inventory management platform.
 
 ---
 
-### 👤 User Features
+## 📋 Task Requirements & Checklist
 
-* User registration with email verification
-* Secure JWT-based authentication
-* Forgot password and reset password flow
-* Dashboard displaying available pizza varieties
-* Custom Pizza Builder:
+### 👤 User Side
+- [x] User registration with email verification
+- [x] User login with JWT-based authorisation
+- [x] Forgot password flow (email reset link)
+- [x] Dashboard displaying available pizza varieties
+- [x] Custom pizza builder flow:
+  - [x] Step 1: Choose a pizza base (5 options)
+  - [x] Step 2: Choose a sauce (5 options)
+  - [x] Step 3: Choose a cheese type
+  - [x] Step 4: Choose vegetables (multiple select)
+- [x] Order summary page before payment
+- [x] Razorpay checkout integration (test mode — clicking "Success" confirms the order)
+- [x] Real-time order status display on user dashboard (Order Received → In Kitchen → Sent to Delivery)
 
-  * Choose pizza base
-  * Select sauce
-  * Select cheese type
-  * Add multiple vegetable toppings
-* Order summary before checkout
-* Payment Integration is still left 
-* Real-time order status tracking:
-
-  * Order Received
-  * In Kitchen
-  * Sent to Delivery
-
----
-
-### 🛠️ Admin Features
-
-* Separate admin authentication system
-* Inventory dashboard for:
-
-  * Pizza Bases
-  * Sauces
-  * Cheeses
-  * Vegetables
-* Automatic stock deduction after successful orders
-* Manual inventory update functionality
-* Configurable low-stock threshold monitoring
-* Automated email notifications for low inventory
-* Order management panel
-* Real-time order status updates for users
+### 🛠️ Admin Side
+- [x] Separate admin login (not accessible from the user registration flow)
+- [x] Inventory dashboard showing current stock of: pizza bases, sauces, cheeses, vegetables
+- [x] Stock automatically decremented after each order
+- [x] Manual stock update capability for each inventory item
+- [x] Automated email notification to admin when any inventory item falls below a configurable threshold (e.g., pizza bases < 20 units) — implemented using `node-cron`
+- [x] Order management panel: view all incoming orders, update status for each order
+- [x] Status change reflected in real-time on the user's dashboard (using WebSockets)
 
 ---
 
 ## 🏗️ Tech Stack
 
 ### Frontend
-
-* React.js
+* React.js (built with Vite)
+* TailwindCSS
 * React Router
 * Axios
-* Context API
 * Socket.io Client
 
 ### Backend
-
-* Node.js
-* Express.js
+* Node.js & Express.js
+* PostgreSQL (using `pg` driver)
 * JWT Authentication
-* Socket.io
-* Node-Cron
-* Nodemailer
-* Razorpay
+* Socket.io (for real-time updates)
+* Node-Cron (for background inventory jobs)
+* Nodemailer (for low-stock alert emails)
 
-## Payment Integration
-Razorpay Checkout is integrated for order payments. Order creation and 
-signature verification follow Razorpay's standard flow (Order API + HMAC-SHA256 
-signature verification). Currently running in demo/test mode using Razorpay's 
-public test key — full account activation requires an Indian PAN-based merchant 
-KYC, so live order creation is simulated for demonstration.
+---
 
+## ⚠️ Important Implementation Changes & Design Decisions
 
-### Database
+During development, a few modifications were made to the original requirements to improve the development experience and system architecture:
 
-* PostgreSQL and pgAdmin (switched from MongoDb to PostgreSQL as I am quite familiar with it)
+### 1. Switched from MongoDB to PostgreSQL
+**Reason:** While the original requirement suggested MongoDB, the database was switched to **PostgreSQL**. A pizza delivery system heavily relies on structured, relational data (e.g., an order maps to specific inventory items, and inventory counts must be strictly decremented in ACID-compliant transactions). PostgreSQL is perfectly suited for this, and the developer was already highly familiar with relational modeling. 
+
+### 2. Custom "Fake" Razorpay Modal
+**Reason:** Razorpay recently updated their test mode policies. New test keys no longer support "direct" client-side checkout without a fully verified merchant account (KYC). When attempting to use the official test scripts, it throws a "No appropriate payment method found" error. 
+To fulfill the requirement of a seamless checkout flow without requiring future evaluators to set up their own Razorpay Merchant accounts, a custom `FakePaymentModal.jsx` was built. This modal perfectly mimics the Razorpay UI, captures dummy card details, simulates a network delay, and hits the backend `/payment/verify` route to trigger the automated inventory deduction upon success.
 
 ---
 
@@ -83,21 +70,21 @@ KYC, so live order creation is simulated for demonstration.
 ```text
 PizzaHub/
 │
-├── client/                 # React frontend
-│   ├── src/
-│   ├── public/
-│   └── package.json
-│
-├── server/                 # Express backend
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── services/
-│   ├── utils/
-│   ├── cron/
-│   └── server.js
-│
+├── WebDev-L3-PizzaDeliveryApp/
+│   ├── client/                 # React frontend (Vite)
+│   │   ├── src/
+│   │   │   ├── components/     # UI Components (e.g. FakePaymentModal)
+│   │   │   ├── pages/          # Dashboard, Checkout, etc.
+│   │   │   └── ...
+│   │   └── package.json
+│   │
+│   ├── server/                 # Express backend
+│   │   ├── config/             # DB & Cron configurations
+│   │   ├── controllers/        # Payment, Order, Auth controllers
+│   │   ├── middleware/         # Auth & Error handling
+│   │   ├── routes/             # API endpoints
+│   │   └── server.js           # Entry point
+│   │
 └── README.md
 ```
 
@@ -106,25 +93,22 @@ PizzaHub/
 ## ⚙️ Installation
 
 ### Clone the Repository
-
 ```bash
-git clone https://github.com/your-username/pizzahub.git
-cd pizzahub
+git clone https://github.com/sajibmrbitz/OIBSIP.git
+cd OIBSIP/WebDev-L3-PizzaDeliveryApp
 ```
 
 ### Install Dependencies
 
-#### Frontend
-
+**Frontend:**
 ```bash
 cd client
 npm install
 ```
 
-#### Backend
-
+**Backend:**
 ```bash
-cd server
+cd ../server
 npm install
 ```
 
@@ -132,23 +116,19 @@ npm install
 
 ## 🔐 Environment Variables
 
-Create a `.env` file inside the `server` directory.
+Create a `.env` file inside the `server` directory using `.env.example` as a template:
 
 ```env
+DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/pizza_delivery
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
 
-JWT_SECRET=your_jwt_secret
-
-CLIENT_URL=http://localhost:3000
-
-EMAIL_USER=your_email
+EMAIL_HOST=smtp.ethereal.email
+EMAIL_PORT=587
+EMAIL_USER=your_test_email@ethereal.email
 EMAIL_PASS=your_email_password
+ADMIN_EMAIL=admin@pizzadelivery.com
 
-RAZORPAY_KEY_ID=your_razorpay_key
-RAZORPAY_KEY_SECRET=your_razorpay_secret
-
-LOW_STOCK_THRESHOLD=20
+CLIENT_URL=http://localhost:5173
 ```
 
 ---
@@ -156,69 +136,36 @@ LOW_STOCK_THRESHOLD=20
 ## ▶️ Running the Application
 
 ### Start Backend
-
 ```bash
 cd server
 npm run dev
 ```
 
-### Start Frontend
-
+### Start Frontend (Vite)
 ```bash
 cd client
-npm start
+npm run dev
 ```
 
-Application URLs:
-
-* Frontend: `http://localhost:3000`
+**Application URLs:**
+* Frontend: `http://localhost:5173`
 * Backend: `http://localhost:5000`
 
 ---
 
-## 🔄 Order Flow
+## 🔄 Order Flow Summary
 
-1. User registers and verifies email.
-2. User logs in securely.
-3. User builds a custom pizza.
-4. Order summary is generated.
-5. User completes payment using Razorpay Test Mode.
-6. Inventory is automatically updated.
-7. Admin receives and processes the order.
-8. Order status updates are reflected in real time on the user's dashboard.
-
----
-
-## 📧 Automated Inventory Notifications
-
-A scheduled background job continuously monitors inventory levels. Whenever any item falls below the configured threshold, the system automatically sends an email alert to the administrator for timely restocking.
-
----
-
-## 🔒 Security Features
-
-* Password hashing using bcrypt
-* JWT-based authentication and authorization
-* Protected API routes
-* Email verification
-* Password reset via secure email links
-* Role-based access control for Admin and User
-
----
-
-## 🎯 Learning Outcomes
-
-This project demonstrates:
-
-* Full-stack MERN application development
-* Authentication and authorization
-* Payment gateway integration
-* Real-time communication with WebSockets
-* Inventory management systems
-* Scheduled background jobs
-* Email service integration
-* RESTful API design and database modelling
-* Production-level application architecture
+1. User registers/logs in securely.
+2. User builds a custom pizza from available inventory.
+3. Order summary is generated with total pricing.
+4. User completes payment using the simulated Razorpay Modal (Demo Mode).
+5. Payment verification triggers an ACID transaction in the PostgreSQL backend:
+   - Order status is set to PAID.
+   - Inventory items (bases, sauces, cheeses, veggies) are automatically deducted.
+6. Admin receives the order on their dashboard.
+7. Admin updates order status (e.g., In Kitchen → Sent to Delivery).
+8. Order status updates are pushed in real-time to the user's dashboard via Socket.io.
+9. If inventory falls below the threshold, `node-cron` triggers an automated email via `nodemailer` to restock.
 
 ---
 
@@ -228,7 +175,3 @@ This project demonstrates:
 
 BUET CSE Undergraduate
 Passionate about Full-Stack Development, Data Analytics, and Building Scalable Software Systems.
-
----
-
-⭐ If you found this project useful, consider giving it a star on GitHub.
