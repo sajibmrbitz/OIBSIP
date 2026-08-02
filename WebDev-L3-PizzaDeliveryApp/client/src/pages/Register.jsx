@@ -25,7 +25,7 @@ const Register = () => {
     <div className="flex min-h-screen items-center justify-center p-4 bg-transparent font-sans">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
         <div className="flex justify-center mb-6">
-          <img src="/images/logo.jpg" alt="PizzaHub Logo" className="h-16 w-16 object-contain shadow-sm rounded-lg" />
+          <img src={`${import.meta.env.BASE_URL}images/logo.jpg`} alt="PizzaHub Logo" className="h-16 w-16 object-contain shadow-sm rounded-lg" />
         </div>
         <h2 className="mb-6 text-center text-3xl font-bold text-gray-800">Create an Account</h2>
         

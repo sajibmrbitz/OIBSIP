@@ -25,7 +25,7 @@ const Home = () => {
           <div className="relative flex justify-center mb-8">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-[#f90] rounded-full blur-[60px] opacity-40 pointer-events-none"></div>
             <div className="relative z-10 bg-white p-4 rounded-2xl shadow-2xl">
-              <img src="/images/logo.jpg" alt="PizzaHub Logo" className="h-32 w-auto object-contain rounded-lg" />
+              <img src={`${import.meta.env.BASE_URL}images/logo.jpg`} alt="PizzaHub Logo" className="h-32 w-auto object-contain rounded-lg" />
             </div>
           </div>
           <h1 className="mb-4 text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
@@ -103,7 +103,7 @@ const Home = () => {
       <footer className="bg-gray-900 py-12 text-center text-gray-400">
         <div className="mx-auto max-w-7xl px-4">
           <div className="flex items-center justify-center space-x-3 mb-2">
-            <img src="/images/logo.jpg" alt="PizzaHub Logo" className="h-8 w-8 object-contain grayscale opacity-80 rounded-md" />
+            <img src={`${import.meta.env.BASE_URL}images/logo.jpg`} alt="PizzaHub Logo" className="h-8 w-8 object-contain grayscale opacity-80 rounded-md" />
             <span className="text-2xl font-bold text-white">PizzaHub</span>
           </div>
           <p className="mb-8 text-sm">Delivering happiness, one slice at a time.</p>

@@ -17,14 +17,14 @@ const gradientMap = {
 };
 
 const exactImageMap = {
-  'Thin Crust': '/images/base-thin-crust.jpg',
-  'Thick Crust': '/images/base-thick-crust.jpg',
-  'Tomato': '/images/sauce-tomatoes.jpg',
-  'BBQ': '/images/sauce-bbqs.jpg',
-  'Mozzarella': '/images/cheese-mozarella.jpg', 
-  'Cheddar': '/images/cheese-chedder.jpg',      
-  'Onion': '/images/veg-onion.jpg',             
-  'Capsicum': '/images/veg-capsicum.jpg',
+  'Thin Crust': 'images/base-thin-crust.jpg',
+  'Thick Crust': 'images/base-thick-crust.jpg',
+  'Tomato': 'images/sauce-tomatoes.jpg',
+  'BBQ': 'images/sauce-bbqs.jpg',
+  'Mozzarella': 'images/cheese-mozarella.jpg', 
+  'Cheddar': 'images/cheese-chedder.jpg',      
+  'Onion': 'images/veg-onion.jpg',             
+  'Capsicum': 'images/veg-capsicum.jpg',
 };
 
 const ItemCard = ({ name, itemType, selected, onClick, price }) => {
@@ -35,8 +35,9 @@ const ItemCard = ({ name, itemType, selected, onClick, price }) => {
 
   // Get exact mapped image or try to guess the standard format
   const slug = name.toLowerCase().replace(/\s+/g, '-');
-  const fallbackImgUrl = `/images/${itemType}-${slug}.jpg`;
-  const imgUrl = exactImageMap[name] || fallbackImgUrl;
+  const fallbackImgUrl = `images/${itemType}-${slug}.jpg`;
+  const imgPath = exactImageMap[name] || fallbackImgUrl;
+  const imgUrl = `${import.meta.env.BASE_URL}${imgPath}`;
 
   return (
     <div

@@ -51,7 +51,7 @@ const Dashboard = () => {
       <div className="mx-auto max-w-5xl">
         <header className="mb-10 flex items-center justify-between rounded-2xl bg-white p-6 shadow-md">
           <div className="flex items-center space-x-4">
-            <img src="/images/logo.jpg" alt="PizzaHub Logo" className="h-12 w-12 object-contain shadow-sm rounded-lg" />
+            <img src={`${import.meta.env.BASE_URL}images/logo.jpg`} alt="PizzaHub Logo" className="h-12 w-12 object-contain shadow-sm rounded-lg" />
             <div>
               <div className="mb-1">
                 <LogoText className="text-3xl" />

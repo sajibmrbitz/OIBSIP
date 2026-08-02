@@ -78,7 +78,7 @@ const AdminDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center space-x-3">
-              <img src="/images/logo.jpg" alt="PizzaHub Logo" className="h-8 w-8 object-contain shadow-sm rounded-md" />
+              <img src={`${import.meta.env.BASE_URL}images/logo.jpg`} alt="PizzaHub Logo" className="h-8 w-8 object-contain shadow-sm rounded-md" />
               <div className="flex items-center space-x-2">
                 <LogoText className="text-xl" />
                 <span className="text-xl font-bold text-gray-900 tracking-tight">Admin Portal</span>

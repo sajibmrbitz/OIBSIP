@@ -35,7 +35,7 @@ const AdminLogin = () => {
     <div className="flex min-h-screen items-center justify-center bg-transparent p-4 font-sans">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md border border-gray-200">
         <div className="mb-8 text-center">
-          <img src="/images/logo.jpg" alt="PizzaHub Logo" className="h-20 w-20 object-contain shadow-sm mx-auto mb-4 border border-gray-100 rounded-lg" />
+          <img src={`${import.meta.env.BASE_URL}images/logo.jpg`} alt="PizzaHub Logo" className="h-20 w-20 object-contain shadow-sm mx-auto mb-4 border border-gray-100 rounded-lg" />
           <div className="flex items-center justify-center space-x-2 mb-1">
             <LogoText className="text-2xl" />
             <span className="text-2xl font-bold text-gray-800">Admin</span>
