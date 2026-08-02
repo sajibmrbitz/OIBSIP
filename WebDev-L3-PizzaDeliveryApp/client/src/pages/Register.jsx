@@ -1,11 +1,15 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axios';
+import { AuthContext } from '../context/AuthContext';
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -15,7 +19,15 @@ const Register = () => {
     setSuccess(null);
     try {
       const res = await axiosInstance.post('/auth/register', formData);
-      setSuccess(res.data.message);
+      setSuccess("Account created successfully! Redirecting to dashboard...");
+      
+      // Auto-login the user with returned token and user object
+      login(res.data.token, res.data.user);
+      
+      // Faded pop-up effect via setTimeout before redirecting
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1500);
     } catch (err) {
       setError(err.response?.data?.message || 'An error occurred during registration');
     }

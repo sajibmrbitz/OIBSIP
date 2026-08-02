@@ -19,30 +19,22 @@ exports.register = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    // Generate verification token
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-
-    // Insert user
+    // Insert user (auto-verified)
     const newUser = await pool.query(
-      'INSERT INTO users (name, email, password_hash, role, is_verified, verification_token) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, name, email, role',
-      [name, email, passwordHash, 'user', false, verificationToken]
+      'INSERT INTO users (name, email, password_hash, role, is_verified) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, role',
+      [name, email, passwordHash, 'user', true]
     );
 
-    // Send verification email
-    const transporter = require('../config/mailer');
-    const verifyUrl = `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`;
-    
-    const info = await transporter.sendMail({
-      from: '"Pizza Delivery" <no-reply@pizzadelivery.com>',
-      to: email,
-      subject: 'Verify your email address',
-      text: `Please verify your email by clicking this link: ${verifyUrl}`,
-      html: `<p>Please click <a href="${verifyUrl}">here</a> to verify your email address.</p>`,
-    });
+    const user = newUser.rows[0];
 
-    console.log('Verification email sent: %s', nodemailer.getTestMessageUrl(info));
+    // Generate JWT
+    const token = jwt.sign(
+      { userId: user.id, role: user.role },
+      process.env.JWT_SECRET || 'fallback_secret',
+      { expiresIn: '7d' }
+    );
 
-    res.status(201).json({ message: 'User registered successfully. Please check your email to verify your account.', user: newUser.rows[0] });
+    res.status(201).json({ message: 'Account created successfully!', token, user });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ message: 'Server error: ' + (error.message || 'Unknown error') });
@@ -65,11 +57,6 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
-    }
-
-    // Check if verified
-    if (!user.is_verified) {
-      return res.status(403).json({ message: 'Please verify your email before logging in' });
     }
 
     // Generate JWT
