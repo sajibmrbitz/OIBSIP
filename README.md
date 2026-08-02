@@ -6,6 +6,32 @@ This project was built to fulfill the **LEVEL 3** task requirements of a complex
 
 ---
 
+## 🔗 Live Demo
+- Frontend: https://sajibmrbitz.github.io/OIBSIP/
+- Backend API: https://pizzahub-server-uec3.onrender.com
+
+> Note: Backend is hosted on Render's free tier — first request after inactivity may take 30-50 seconds to wake up.
+
+---
+
+## 📸 Screenshots
+
+### User Experience
+| Home Page | User Dashboard | Pizza Builder |
+| :---: | :---: | :---: |
+| ![Home](screenshots/Home.png) | ![User Dashboard](screenshots/UserDashboard.png) | ![Pizza Build](screenshots/Pizza_Build.png) |
+
+| Checkout | Payment Demo | User Orders |
+| :---: | :---: | :---: |
+| ![Checkout](screenshots/Checkout.png) | ![Payment Demo](screenshots/PaymentDemo.png) | ![User Orders](screenshots/User_Orders.png) |
+
+### Admin Experience
+| Admin Login | Admin Dashboard (Inventory) | Admin Orders |
+| :---: | :---: | :---: |
+| ![Admin Login](screenshots/Admin_login.png) | ![Admin Inventory](screenshots/admin_inventory.png) | ![Admin Orders](screenshots/admin_orders.png) |
+
+---
+
 ## 📋 Task Requirements & Checklist
 
 ### 👤 User Side
