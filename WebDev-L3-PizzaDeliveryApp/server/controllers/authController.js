@@ -45,7 +45,7 @@ exports.register = async (req, res) => {
     res.status(201).json({ message: 'User registered successfully. Please check your email to verify your account.', user: newUser.rows[0] });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error: ' + (error.message || 'Unknown error') });
   }
 };
 
